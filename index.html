@@ -150,9 +150,10 @@
                         <div class="flex items-center justify-between">
                             <span class="text-gray-700 font-medium">High Chamber</span>
                             <div class="flex items-center space-x-2">
-                                <span class="text-sm text-gray-500">Off</span>
+                                <span id="highChamberStatus1" class="text-sm text-gray-500">On</span>
                                 <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" checked class="sr-only peer">
+                                    <input type="checkbox" id="highChamberToggle1" checked class="sr-only peer"
+                                        onchange="toggleChamber('highChamber1')">
                                     <div
                                         class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-custom">
                                     </div>
@@ -163,9 +164,10 @@
                         <div class="flex items-center justify-between">
                             <span class="text-gray-700 font-medium">Low Chamber</span>
                             <div class="flex items-center space-x-2">
-                                <span class="text-sm text-gray-500">Off</span>
+                                <span id="lowChamberStatus1" class="text-sm text-gray-500">On</span>
                                 <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" checked class="sr-only peer">
+                                    <input type="checkbox" id="lowChamberToggle1" checked class="sr-only peer"
+                                        onchange="toggleChamber('lowChamber1')">
                                     <div
                                         class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-custom">
                                     </div>
@@ -207,9 +209,10 @@
                         <div class="flex items-center justify-between">
                             <span class="text-gray-700 font-medium">High Chamber</span>
                             <div class="flex items-center space-x-2">
-                                <span class="text-sm text-gray-500">On</span>
+                                <span id="highChamberStatus2" class="text-sm text-gray-500">On</span>
                                 <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" checked class="sr-only peer">
+                                    <input type="checkbox" id="highChamberToggle2" checked class="sr-only peer"
+                                        onchange="toggleChamber('highChamber2')">
                                     <div
                                         class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-custom">
                                     </div>
@@ -265,6 +268,33 @@
             border: none;
         }
     </style>
+
+    <script>
+        function toggleChamber(chamberId) {
+            let toggle, status;
+
+            if (chamberId === 'highChamber1') {
+                toggle = document.getElementById('highChamberToggle1');
+                status = document.getElementById('highChamberStatus1');
+            } else if (chamberId === 'lowChamber1') {
+                toggle = document.getElementById('lowChamberToggle1');
+                status = document.getElementById('lowChamberStatus1');
+            } else if (chamberId === 'highChamber2') {
+                toggle = document.getElementById('highChamberToggle2');
+                status = document.getElementById('highChamberStatus2');
+            }
+
+            if (toggle && status) {
+                if (toggle.checked) {
+                    status.textContent = 'On';
+                    status.className = 'text-sm text-green-600 font-medium';
+                } else {
+                    status.textContent = 'Off';
+                    status.className = 'text-sm text-gray-500';
+                }
+            }
+        }
+    </script>
 </body>
 
 </html>
