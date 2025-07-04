@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Agro Dryer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'green-custom': '#16A34A',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gray-100 p-4">
+    <div class="max-w-7xl mx-auto space-y-6">
+        <!-- Header -->
+        <div class="bg-green-custom text-white p-6 rounded-lg shadow-lg">
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold">SMART AGRO DRYER</h1>
+                <div class="flex space-x-8">
+                    <div class="text-center">
+                        <div class="text-sm opacity-80">System Status</div>
+                        <div class="flex items-center mt-1">
+                            <span
+                                class="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">ACTIVE</span>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sm opacity-80">Drying Mode</div>
+                        <select
+                            class="mt-1 bg-white text-gray-800 px-3 py-1 rounded border border-gray-300 text-sm font-semibold focus:ring-2 focus:ring-blue-300">
+                            <option selected>Auto (AI)</option>
+                            <option>Manual</option>
+                        </select>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-sm opacity-80">Crop Selected</div>
+                        <select
+                            class="mt-1 bg-white text-gray-800 px-3 py-1 rounded border border-gray-300 text-sm font-semibold focus:ring-2 focus:ring-blue-300">
+                            <option selected>Cassava</option>
+                            <option>Rice</option>
+                            <option>Corn</option>
+                            <option>Wheat</option>
+                            <option>Beans</option>
+                            <option>Maize</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Sensor Readings -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">Sensor Readings</h2>
+
+                <!-- High Chamber -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">High Chamber</h3>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-600 mb-2">Temperature (°C)</label>
+                        <input type="number" value="65"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-custom focus:border-green-custom text-2xl font-bold text-green-custom"
+                            placeholder="Enter temperature">
+                        <div class="text-sm text-gray-500 mt-1">Humidity: Drying - 15 min left</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-600 mb-2">Humidity (%)</label>
+                        <input type="number" value="35"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-custom focus:border-green-custom text-xl font-semibold"
+                            placeholder="Enter humidity">
+                    </div>
+                </div>
+
+                <!-- Low Chamber -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Low Chamber</h3>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-600 mb-2">Temperature (°C)</label>
+                        <input type="number" value="45"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-custom focus:border-green-custom text-2xl font-bold text-green-custom"
+                            placeholder="Enter temperature">
+                        <div class="text-sm text-gray-500 mt-1">Humidity: Drying Complete</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-600 mb-2">Humidity (%)</label>
+                        <input type="number" value="25"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-custom focus:border-green-custom text-xl font-semibold"
+                            placeholder="Enter humidity">
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Analytics -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">AI Analytics</h2>
+
+                <div class="text-center mb-6">
+                    <div class="text-sm text-gray-600 mb-2">Estimated Time Remaining</div>
+                    <div class="text-4xl font-bold text-gray-800">15 <span class="text-lg">min</span></div>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="flex items-center">
+                        <span class="text-lg mr-2">📈</span>
+                        <span class="text-gray-700">Drying Curve</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-lg mr-2">⬇️</span>
+                        <span class="text-gray-700">Crop Profile Matched: Cassava</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="space-y-6">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">Controls</h2>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700 font-medium">Drying Mode</span>
+                            <select
+                                class="bg-white text-gray-800 px-3 py-1 rounded border border-gray-300 text-sm font-semibold focus:ring-2 focus:ring-green-custom focus:border-green-custom">
+                                <option selected>Auto (AI)</option>
+                                <option>Manual</option>
+                            </select>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700 font-medium">High Chamber</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">Off</span>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" checked class="sr-only peer">
+                                    <div
+                                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-custom">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700 font-medium">Low Chamber</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">Off</span>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" checked class="sr-only peer">
+                                    <div
+                                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-custom">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mt-6">
+                            <h3 class="text-gray-700 font-medium mb-3">Fan Speed</h3>
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-600">Speed Level</label>
+                                <input type="range" min="0" max="100" value="75"
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
+                                <div class="flex justify-between text-xs text-gray-500">
+                                    <span>0%</span>
+                                    <span>50%</span>
+                                    <span>100%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4">
+                            <h3 class="text-gray-700 font-medium mb-3">Recommendations</h3>
+                            <ul class="text-sm text-gray-600 space-y-1">
+                                <li>• Reduce blower speed</li>
+                                <li>• Check descacantlevel</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">Controls</h2>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700 font-medium">Drying Mode</span>
+                            <select
+                                class="bg-white text-gray-800 px-3 py-1 rounded border border-gray-300 text-sm font-semibold focus:ring-2 focus:ring-green-custom focus:border-green-custom">
+                                <option selected>Auto (AI)</option>
+                                <option>Manual</option>
+                            </select>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700 font-medium">High Chamber</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm text-gray-500">On</span>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" checked class="sr-only peer">
+                                    <div
+                                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-custom">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-600 mb-2">Crop Type</label>
+                            <select
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-custom focus:border-green-custom">
+                                <option selected>Cassava</option>
+                                <option>Rice</option>
+                                <option>Corn</option>
+                                <option>Wheat</option>
+                            </select>
+                        </div>
+
+                        <div class="flex space-x-3 pt-4">
+                            <button
+                                class="flex-1 bg-green-custom text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-600 transition-colors">
+                                Start Drying
+                            </button>
+                            <button
+                                class="flex-1 bg-gray-300 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-400 transition-colors">
+                                Stop
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Graphs Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">Graphs</h2>
+            <h3 class="text-lg font-semibold text-gray-700 mb-4">Temperature & Humidity</h3>
+
+            <!-- Graph placeholder -->
+            <div class="h-64 bg-gray-50 rounded-lg flex items-center justify-center relative overflow-hidden">
+                <!-- Simulated graph lines -->
+                <svg class="absolute inset-0 w-full h-full" viewBox="0 0 400 200">
+                    <!-- Temperature line (green) -->
+                    <path d="M 20 150 Q 80 120 140 130 Q 200 110 260 100 Q 320 95 380 90" stroke="#16A34A"
+                        stroke-width="3" fill="none" class="opacity-80" />
+
+                    <!-- Humidity line (green) -->
+                    <path d="M 20 170 Q 80 160 140 155 Q 200 145 260 140 Q 320 135 380 130" stroke="#10B981"
+                        stroke-width="3" fill="none" class="opacity-80" />
+                </svg>
+
+                <!-- Legend -->
+                <div class="absolute top-4 right-4 bg-white p-3 rounded shadow-sm">
+                    <div class="flex items-center space-x-4 text-sm">
+                        <div class="flex items-center">
+                            <div class="w-4 h-0.5 bg-green-custom mr-2"></div>
+                            <span>Temperature</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-4 h-0.5 bg-green-500 mr-2"></div>
+                            <span>Humidity</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #16A34A;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #16A34A;
+            cursor: pointer;
+            border: none;
+        }
+    </style>
+</body>
+
+</html>
