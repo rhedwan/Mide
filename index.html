@@ -68,17 +68,18 @@
 
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-600 mb-2">Temperature (°C)</label>
-                        <input type="number" value="65"
+                        <input type="number" value="65" id="highTempInput"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-custom focus:border-green-custom text-2xl font-bold text-green-custom"
-                            placeholder="Enter temperature">
+                            placeholder="Enter temperature" onchange="updateAIAnalytics()"
+                            oninput="updateAIAnalytics()">
                         <div class="text-sm text-gray-500 mt-1">Humidity: Drying - 15 min left</div>
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-600 mb-2">Humidity (%)</label>
-                        <input type="number" value="35"
+                        <input type="number" value="35" id="highHumidityInput"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-custom focus:border-green-custom text-xl font-semibold"
-                            placeholder="Enter humidity">
+                            placeholder="Enter humidity" onchange="updateAIAnalytics()" oninput="updateAIAnalytics()">
                     </div>
                 </div>
 
@@ -88,17 +89,18 @@
 
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-600 mb-2">Temperature (°C)</label>
-                        <input type="number" value="45"
+                        <input type="number" value="45" id="lowTempInput"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-custom focus:border-green-custom text-2xl font-bold text-green-custom"
-                            placeholder="Enter temperature">
+                            placeholder="Enter temperature" onchange="updateAIAnalytics()"
+                            oninput="updateAIAnalytics()">
                         <div class="text-sm text-gray-500 mt-1">Humidity: Drying Complete</div>
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-600 mb-2">Humidity (%)</label>
-                        <input type="number" value="25"
+                        <input type="number" value="25" id="lowHumidityInput"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-custom focus:border-green-custom text-xl font-semibold"
-                            placeholder="Enter humidity">
+                            placeholder="Enter humidity" onchange="updateAIAnalytics()" oninput="updateAIAnalytics()">
                     </div>
                 </div>
             </div>
@@ -124,10 +126,20 @@
                 </div>
 
                 <div class="pt-4">
-                    <h3 class="text-gray-700 font-medium mb-3">Recommendations</h3>
-                    <ul class="text-sm text-gray-600 space-y-1">
-                        <li>• Reduce blower speed</li>
-                        <li>• Check descacantlevel</li>
+                    <div id="aiCondition" class="mb-3">
+                        <div class="flex items-center mb-2">
+                            <span id="conditionIcon" class="text-lg mr-2">🟢</span>
+                            <span id="conditionText" class="text-sm font-medium text-gray-700">Low Temp + Low
+                                Humidity</span>
+                        </div>
+                        <p id="conditionDescription" class="text-xs text-gray-600 mb-3">Drying inefficient — not enough
+                            heat</p>
+                    </div>
+                    <h3 class="text-gray-700 font-medium mb-3">AI Recommendations</h3>
+                    <ul id="aiRecommendations" class="text-sm text-gray-600 space-y-1">
+                        <li>• Add charcoal or check burner</li>
+                        <li>• Consider turning chamber off</li>
+                        <li>• AI may auto-suspend cycle</li>
                     </ul>
                 </div>
             </div>
@@ -294,6 +306,104 @@
                 }
             }
         }
+
+        function updateAIAnalytics() {
+            // Get temperature and humidity values from both chambers
+            const highTemp = parseFloat(document.getElementById('highTempInput').value) || 0;
+            const highHumidity = parseFloat(document.getElementById('highHumidityInput').value) || 0;
+            const lowTemp = parseFloat(document.getElementById('lowTempInput').value) || 0;
+            const lowHumidity = parseFloat(document.getElementById('lowHumidityInput').value) || 0;
+
+            // Use the higher temperature and humidity values to determine condition
+            const maxTemp = Math.max(highTemp, lowTemp);
+            const maxHumidity = Math.max(highHumidity, lowHumidity);
+
+            let condition = determineCondition(maxTemp, maxHumidity);
+
+            // Update the AI analytics display
+            document.getElementById('conditionIcon').textContent = condition.icon;
+            document.getElementById('conditionText').textContent = condition.text;
+            document.getElementById('conditionDescription').textContent = condition.description;
+
+            // Update recommendations
+            const recommendationsList = document.getElementById('aiRecommendations');
+            recommendationsList.innerHTML = '';
+            condition.recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.textContent = '• ' + rec;
+                recommendationsList.appendChild(li);
+            });
+        }
+
+        function determineCondition(temp, humidity) {
+            const isHighTemp = temp >= 180 && temp <= 300;
+            const isLowTemp = temp >= 37 && temp <= 179;
+            const isHighHumidity = humidity >= 60 && humidity <= 100;
+            const isLowHumidity = humidity >= 0 && humidity <= 40;
+
+            if (isHighTemp && isHighHumidity) {
+                return {
+                    icon: '🔴',
+                    text: 'High Temp + High Humidity',
+                    description: 'Drying in progress, but moisture still high',
+                    recommendations: [
+                        'Increase fan speed',
+                        'Keep extractor fans on max',
+                        'Check desiccant saturation'
+                    ]
+                };
+            } else if (isLowTemp && isHighHumidity) {
+                return {
+                    icon: '🔵',
+                    text: 'Low Temp + High Humidity',
+                    description: 'Chamber too cold for effective drying',
+                    recommendations: [
+                        'Add more charcoal',
+                        'Reduce crop load',
+                        'Wait until system heats up'
+                    ]
+                };
+            } else if (isHighTemp && isLowHumidity) {
+                return {
+                    icon: '🟠',
+                    text: 'High Temp + Low Humidity',
+                    description: 'Drying almost complete',
+                    recommendations: [
+                        'Slow down fan',
+                        'Prepare shutdown',
+                        'Record drying data'
+                    ]
+                };
+            } else if (isLowTemp && isLowHumidity) {
+                return {
+                    icon: '🟢',
+                    text: 'Low Temp + Low Humidity',
+                    description: 'Drying inefficient — not enough heat',
+                    recommendations: [
+                        'Add charcoal or check burner',
+                        'Consider turning chamber off',
+                        'AI may auto-suspend cycle'
+                    ]
+                };
+            } else {
+                // Fallback for edge cases
+                return {
+                    icon: '⚪',
+                    text: 'Undefined Condition',
+                    description: 'Readings outside normal parameters',
+                    recommendations: [
+                        'Check sensor calibration',
+                        'Review system settings',
+                        'Contact technical support'
+                    ]
+                };
+            }
+        }
+
+        // Initialize AI analytics on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            updateAIAnalytics();
+        });
     </script>
 </body>
 
