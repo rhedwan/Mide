@@ -43,7 +43,7 @@
                     </div>
                     <div class="text-center">
                         <div class="text-sm opacity-80">Crop Selected</div>
-                        <select
+                        <select id="headerCropSelect" onchange="updateCropProfile()"
                             class="mt-1 bg-white text-gray-800 px-3 py-1 rounded border border-gray-300 text-sm font-semibold focus:ring-2 focus:ring-green-300">
                             <option selected>Cassava</option>
                             <option>Rice</option>
@@ -117,10 +117,11 @@
                 </div>
 
                 <div class="space-y-3">
-                    
+
                     <div class="flex items-center">
                         <span class="text-lg mr-2">⬇️</span>
-                        <span class="text-gray-700">Crop Profile Matched: Cassava</span>
+                        <span class="text-gray-700">Crop Profile Matched: <span
+                                id="selectedCropProfile">Cassava</span></span>
                     </div>
                 </div>
 
@@ -200,48 +201,6 @@
                             </div>
                         </div>
 
-
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">Controls</h2>
-
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between">
-                            <span class="text-gray-700 font-medium">Drying Mode</span>
-                            <select
-                                class="bg-white text-gray-800 px-3 py-1 rounded border border-gray-300 text-sm font-semibold focus:ring-2 focus:ring-green-custom focus:border-green-custom">
-                                <option selected>Auto (AI)</option>
-                                <option>Manual</option>
-                            </select>
-                        </div>
-
-                        <div class="flex items-center justify-between">
-                            <span class="text-gray-700 font-medium">High Chamber</span>
-                            <div class="flex items-center space-x-2">
-                                <span id="highChamberStatus2" class="text-sm text-gray-500">On</span>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="highChamberToggle2" checked class="sr-only peer"
-                                        onchange="toggleChamber('highChamber2')">
-                                    <div
-                                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-custom">
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-600 mb-2">Crop Type</label>
-                            <select
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-custom focus:border-green-custom">
-                                <option selected>Cassava</option>
-                                <option>Rice</option>
-                                <option>Corn</option>
-                                <option>Wheat</option>
-                            </select>
-                        </div>
-
                         <div class="flex space-x-3 pt-4">
                             <button
                                 class="flex-1 bg-green-custom text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-600 transition-colors">
@@ -252,8 +211,11 @@
                                 Stop
                             </button>
                         </div>
+
                     </div>
                 </div>
+
+
             </div>
         </div>
 
@@ -290,9 +252,6 @@
             } else if (chamberId === 'lowChamber1') {
                 toggle = document.getElementById('lowChamberToggle1');
                 status = document.getElementById('lowChamberStatus1');
-            } else if (chamberId === 'highChamber2') {
-                toggle = document.getElementById('highChamberToggle2');
-                status = document.getElementById('highChamberStatus2');
             }
 
             if (toggle && status) {
@@ -324,6 +283,12 @@
             document.getElementById('conditionText').textContent = condition.text;
             document.getElementById('conditionDescription').textContent = condition.description;
 
+            // Update time remaining
+            const timeDisplay = document.querySelector('.text-4xl.font-bold.text-gray-800');
+            if (timeDisplay && condition.timeRemaining > 0) {
+                timeDisplay.innerHTML = `${condition.timeRemaining} <span class="text-lg">min</span>`;
+            }
+
             // Update recommendations
             const recommendationsList = document.getElementById('aiRecommendations');
             recommendationsList.innerHTML = '';
@@ -335,8 +300,8 @@
         }
 
         function determineCondition(temp, humidity) {
-            const isHighTemp = temp >= 180 && temp <= 300;
-            const isLowTemp = temp >= 37 && temp <= 179;
+            const isHighTemp = temp >= 150 && temp <= 300;
+            const isLowTemp = temp >= 37 && temp <= 120;
             const isHighHumidity = humidity >= 60 && humidity <= 100;
             const isLowHumidity = humidity >= 0 && humidity <= 40;
 
@@ -345,10 +310,10 @@
                     icon: '🔴',
                     text: 'High Temp + High Humidity',
                     description: 'Drying in progress, but moisture still high',
+                    timeRemaining: 15,
                     recommendations: [
                         'Increase fan speed',
-                        'Keep extractor fans on max',
-                        'Check desiccant saturation'
+                        'Keep extractor fans on max'
                     ]
                 };
             } else if (isLowTemp && isHighHumidity) {
@@ -356,6 +321,7 @@
                     icon: '🔵',
                     text: 'Low Temp + High Humidity',
                     description: 'Chamber too cold for effective drying',
+                    timeRemaining: 35,
                     recommendations: [
                         'Add more charcoal',
                         'Reduce crop load',
@@ -367,10 +333,10 @@
                     icon: '🟠',
                     text: 'High Temp + Low Humidity',
                     description: 'Drying almost complete',
+                    timeRemaining: 4,
                     recommendations: [
                         'Slow down fan',
-                        'Prepare shutdown',
-                        'Record drying data'
+                        'Prepare shutdown'
                     ]
                 };
             } else if (isLowTemp && isLowHumidity) {
@@ -378,10 +344,10 @@
                     icon: '🟢',
                     text: 'Low Temp + Low Humidity',
                     description: 'Drying inefficient — not enough heat',
+                    timeRemaining: 60,
                     recommendations: [
                         'Add charcoal or check burner',
-                        'Consider turning chamber off',
-                        'AI may auto-suspend cycle'
+                        'Consider turning chamber off'
                     ]
                 };
             } else {
@@ -390,6 +356,7 @@
                     icon: '⚪',
                     text: 'Undefined Condition',
                     description: 'Readings outside normal parameters',
+                    timeRemaining: 0,
                     recommendations: [
                         'Check sensor calibration',
                         'Review system settings',
@@ -399,9 +366,19 @@
             }
         }
 
+        function updateCropProfile() {
+            const cropSelect = document.getElementById('headerCropSelect');
+            const cropProfile = document.getElementById('selectedCropProfile');
+
+            if (cropSelect && cropProfile) {
+                cropProfile.textContent = cropSelect.value;
+            }
+        }
+
         // Initialize AI analytics on page load
         document.addEventListener('DOMContentLoaded', function () {
             updateAIAnalytics();
+            updateCropProfile();
         });
     </script>
 </body>
